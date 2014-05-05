@@ -1,8 +1,7 @@
-window.App = Ember.Application.create();
+App = Ember.Application.create();
 
 App.ApplicationAdapter = DS.FixtureAdapter.extend({
 });
-
 
 //ROUTER
 
@@ -14,7 +13,12 @@ App.Router.map(function() {
 
 App.IndexRoute = Ember.Route.extend({
   model: function() {
-    return this.store.find('book');
+    return Ember.RSVP.hash({
+      books: this.store.find('book')
+    });
+  },
+  setupController: function(controller, model) {
+    controller.set('books', model.books);
   }
 });
 
@@ -28,37 +32,17 @@ App.BookRoute = Ember.Route.extend({
 //MODELS
 
 App.Book = DS.Model.extend({
-  title: DS.attr(),
-  author: DS.attr(),
-  review: DS.attr(),
+  title: DS.attr('string'),
+  author: DS.attr('string'),
+  review: DS.attr('string'),
   rating: DS.attr('number'),
   amazon_id: DS.attr(),
   url: function() {
-    return "http://www.amazon.com/gp/products/"+this.get('amazon_id');
+    return "http://www.amazon.com/dp/products/"+this.get('amazon_id');
   }.property('amazon_id'),
   image: function() {
-    return "http://www.amazon.com/gp/images/P/"+this.get('amazon_id')+".01.ZTZZZZZZ.jpg";
+    return "http://www.amazon.com/dp/images/P/"+this.get('amazon_id')+".01.ZTZZZZZZ.jpg";
   }.property('amazon_id')
-});
-
-
-//CONTROLLERS
-
-App.IndexController = Ember.Controller.extend({});
-
-App.BooksController = Ember.ArrayController.extend({
-  sortProperties: ['title'],
-  actions: {
-    createBook: function() {
-      var bookName = this.get('newBook');
-      if (!name.trim()) { return; }
-      var book = this.store.createRecord('book', {
-        bookName: bookName
-      });
-      this.set('newBook', '');
-      book.save();
-    }
-  }
 });
 
 //FIXTURES
@@ -92,3 +76,25 @@ App.Book.FIXTURES = [
     genre: 3
   }
 ];
+
+
+//CONTROLLERS
+
+App.IndexController = Ember.Controller.extend({});
+
+App.BooksController = Ember.ArrayController.extend({
+  sortProperties: ['title'],
+  actions: {
+    createBook: function() {
+      var bookName = this.get('newBook');
+      if (!name.trim()) { return; }
+      var book = this.store.createRecord('book', {
+        bookName: bookName
+      });
+      this.set('newBook', '');
+      book.save();
+    }
+  }
+});
+
+
