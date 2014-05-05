@@ -1,4 +1,3 @@
-//APP
 window.App = Ember.Application.create();
 
 App.ApplicationAdapter = DS.FixtureAdapter.extend({
@@ -6,11 +5,13 @@ App.ApplicationAdapter = DS.FixtureAdapter.extend({
 
 
 //ROUTER
+
 App.Router.map(function() {
   this.resource('book', { path: '/books/:book_id' });
 });
 
 //ROUTES
+
 App.IndexRoute = Ember.Route.extend({
   model: function() {
     return this.store.find('book');
@@ -21,11 +22,11 @@ App.BookRoute = Ember.Route.extend({
   model: function(params) {
     return this.store.find('book', params.book_id);
   }
-})
-
+});
 
 
 //MODELS
+
 App.Book = DS.Model.extend({
   title: DS.attr(),
   author: DS.attr(),
@@ -43,8 +44,10 @@ App.Book = DS.Model.extend({
 
 //CONTROLLERS
 
+App.IndexController = Ember.Controller.extend({});
+
 App.BooksController = Ember.ArrayController.extend({
-  sortProperties: ['bookName'],
+  sortProperties: ['title'],
   actions: {
     createBook: function() {
       var bookName = this.get('newBook');
