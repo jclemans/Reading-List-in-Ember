@@ -22,14 +22,15 @@
     <ol class='breadcrumb'>
       <li class='active'>Books</li>
     </ol>
-
-    <ul class="list-unstyled">
+    <div class='row'>
+      <div class='col-sm-8'>
         {{render 'books' books}}
-
-      <div>
-        <!--//render genres here-->
       </div>
-    </ul>
+      <div class='col-sm-4'>
+        {{render 'genres' genres}}
+      </div>
+    </div>
+
   </script>
 
   <script type="text/x-handlebars" data-template-name="books">
@@ -37,9 +38,18 @@
       {{#each}}
         {{book-details book=this tagName='li' class='row'}}
       {{else}}
-        <li>There are no books</li>
+        <li>Sorry, no books here</li>
       {{/each}}
     </ul>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="genres">
+    <h2>Genres</h2>
+      <ul class='list-unstyled'>
+        {{#each}}
+          <li>{{#link-to 'genre' this class='label label-warning'}}{{name}}{{/link-to}}</li>
+        {{/each}}
+      </ul>
   </script>
 
   <script type="text/x-handlebars" data-template-name="book">
@@ -49,6 +59,15 @@
     </ol>
 
     {{book-details book=this tagName='div' class='row'}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="genre">
+    <ol class='breadcrumb'>
+      <li><a>{{#link-to 'index'}}Genres{{/link-to}}</a>
+      <li class='active'>{{name}}</li>
+    </ol>
+
+    {{render 'books' books}}
   </script>
 
   <script type="text/x-handlebars" data-template-name="components/book-details">
@@ -67,7 +86,7 @@
         <p>{{book.review}}</p>
       </div>
 
-      <span class='label label-primary'>{{book.genre.name}}</span>
+      {{#link-to 'genre' book.genre class='label label-primary'}}{{book.genre.name}}{{/link-to}}
 
     </div>
   </script>

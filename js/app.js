@@ -14,6 +14,7 @@ App.BookDetailsComponent = Ember.Component.extend({
 
 App.Router.map(function() {
   this.resource('book', { path: '/books/:book_id' });
+  this.resource('genre', { path: '/generes/:genre_id' });
 });
 
 //ROUTES
@@ -21,11 +22,13 @@ App.Router.map(function() {
 App.IndexRoute = Ember.Route.extend({
   model: function() {
     return Ember.RSVP.hash({
-      books: this.store.find('book')
+      books: this.store.find('book'),
+      genres: this.store.find('genre')
     });
   },
   setupController: function(controller, model) {
     controller.set('books', model.books);
+    controller.set('genres', model.genres);
   }
 });
 
@@ -44,7 +47,7 @@ App.Book = DS.Model.extend({
   review: DS.attr('string'),
   rating: DS.attr('number'),
   amazon_id: DS.attr(),
-  genre: DS.belongsTo('genre'),
+  genre: DS.belongsTo('genre', { async: true }),
   url: function() {
     return "http://www.amazon.com/dp/products/"+this.get('amazon_id');
   }.property('amazon_id'),
@@ -113,6 +116,14 @@ App.Genre.FIXTURES = [
     id: 3,
     name: 'Non-Fiction',
     books: [1,3,4]
+  },
+  {
+    id: 4,
+    name: 'True Crime'
+  },
+  {
+    id: 5,
+    name: 'Young Adult'
   }
 ];
 
@@ -133,6 +144,10 @@ App.BooksController = Ember.ArrayController.extend({
       book.save();
     }
   }
+});
+
+App.GenresController = Ember.ArrayController.extend({
+  sortProperties: ['name']
 });
 
 
