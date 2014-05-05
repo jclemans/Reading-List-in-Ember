@@ -44,12 +44,18 @@ App.Book = DS.Model.extend({
   review: DS.attr('string'),
   rating: DS.attr('number'),
   amazon_id: DS.attr(),
+  genre: DS.belongsTo('genre'),
   url: function() {
     return "http://www.amazon.com/dp/products/"+this.get('amazon_id');
   }.property('amazon_id'),
   image: function() {
     return "http://ec2.images-amazon.com/images/P/"+this.get('amazon_id')+".01.ZTZZZZZZ.jpg";
   }.property('amazon_id')
+});
+
+App.Genre = DS.Model.extend({
+  name: DS.attr('string'),
+  books: DS.hasMany('book', { async: true })
 });
 
 //FIXTURES
@@ -75,6 +81,15 @@ App.Book.FIXTURES = [
   },
   {
     id: 3,
+    title: 'Economics in One Lesson',
+    author: 'Henry Hazlitt',
+    review: "I should have studied economics. Hazlitt's book is remarkably readable, coherent, and logical. It just confirms that truth is usually understandable, whereas complicated obfuscation is usually the major alarm bell that tips you off when people are trying to shaft you. This guy really knows his stuff. The one lesson is so simple that it takes about five minutes to read the chapter about it. The rest of the book lists various scenarios in which that lesson applies. The general principle of the lesson applies so naturally to various specific cases that it simplifies economics immensely.",
+    rating: 5,
+    amazon_id: '0517548232',
+    genre: 3
+  },
+  {
+    id: 4,
     title: "Jony Ive: The Genius Behind Apple's Greatest Products",
     author: 'Leander Kahney',
     review: "Even though I respect Ive, I felt this biography only hit skin deep. It went over all the major events in his life, his passion for design, awards he achieved -- but that's really it. I dont't feel I know him anymore than before reading this.",
@@ -84,6 +99,22 @@ App.Book.FIXTURES = [
   }
 ];
 
+App.Genre.FIXTURES = [
+  {
+    id: 1,
+    name: 'Science Fiction',
+    books: [2]
+  },
+  {
+    id: 2,
+    name: 'Fiction'
+  },
+  {
+    id: 3,
+    name: 'Non-Fiction',
+    books: [1,3,4]
+  }
+];
 
 //CONTROLLERS
 
