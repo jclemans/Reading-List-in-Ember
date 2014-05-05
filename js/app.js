@@ -3,6 +3,13 @@ App = Ember.Application.create();
 App.ApplicationAdapter = DS.FixtureAdapter.extend({
 });
 
+App.BookDetailsComponent = Ember.Component.extend({
+  classNameBindings: ['ratingClass'],
+  ratingClass: function() {
+    return "rating-" + this.get('book.rating');
+  }.property("book.rating")
+});
+
 //ROUTER
 
 App.Router.map(function() {
