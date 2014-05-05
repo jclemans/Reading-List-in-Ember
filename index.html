@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Reading List with Ember</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+
+<body>
+  <script type="text/x-handlebars" data-template-name="application">
+    <div class="container">
+      <h1>Reading List</h1>
+      {{outlet}}
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="books">
+    <div class="col-md-5" id="books">
+      <h4>Books</h4>
+      <ul id="teams-list" class="list-unstyled">
+        {{#each}}
+          <li class="row">
+            <div class="col-sm-3">
+              <a {{bind-attr src="url"}} target="_blank">
+                <img {{bind-attr src="image"}} />
+              </a>
+              <p class="text-center rating"><strong>{{rating}}</strong>/5</p>
+            </div>
+
+            <div class="col-sm-9">
+              <h3>{{#link-to "book" this}}{{title}}{{/link-to}}</h3>
+              <p class="text-muted"><em>Written by {{author}}</em></p>
+
+              <div>
+                <p>{{review}}</p>
+              </div>
+            </div>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+
+    <div class="col-md-1"></div>
+    <div class="col-md-5" id="team">
+      {{outlet}}
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="team">
+    <h2>{{teamName}}</h2>
+    {{render "players" players}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="players">
+    <h4>Roster</h4>
+    {{input type="text" id="new-player" placeholder="New player name" value=newName action="createPlayer" class="form-control"}}
+      <ul id="player-list">
+        {{#each}}
+          <li>{{playerName}}</li>
+        {{else}}
+          <br>
+          <p>No players on this team yet. Use the field above to add a player.</p>
+        {{/each}}
+      </ul>
+  </script>
+
+  <script src="js/libs/jquery-1.10.2.js"></script>
+  <script src="js/libs/handlebars-1.1.2.js"></script>
+  <script src="js/libs/ember-1.5.1.js"></script>
+  <script src="js/libs/ember-data.js"></script>
+  <script src="js/libs/localstorage_adapter.js"></script>
+  <script src="js/app.js"></script>
+  <!-- to activate the test runner, add the "?test" query string parameter -->
+  <script src="tests/runner.js"></script>
+</body>
+</html>
