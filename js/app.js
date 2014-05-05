@@ -41,7 +41,7 @@ App.Book = DS.Model.extend({
     return "http://www.amazon.com/dp/products/"+this.get('amazon_id');
   }.property('amazon_id'),
   image: function() {
-    return "http://www.amazon.com/dp/images/P/"+this.get('amazon_id')+".01.ZTZZZZZZ.jpg";
+    return "http://ec2.images-amazon.com/images/P/"+this.get('amazon_id')+".01.ZTZZZZZZ.jpg";
   }.property('amazon_id')
 });
 
