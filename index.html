@@ -45,12 +45,31 @@
   </script>
 
   <script type="text/x-handlebars" data-template-name="genres">
-    <h2>Genres</h2>
+    <h3>Genres</h3>
       <ul class='list-unstyled'>
         {{#each}}
           <li>{{#link-to 'genre' this class='label label-warning'}}{{name}}{{/link-to}}</li>
         {{/each}}
       </ul>
+      <hr>
+      {{outlet}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="genres/new">
+    <ol class='breadcrumb'>
+      <li>{{#link-to 'index'}}Books{{/link-to}}</li>
+      <li class='active'>New Genre</li>
+    </ol>
+
+    <form class='form-horizontal' role='form'>
+      <div class='form-group'>
+        <label for='genre_name' class='col-sm-2 control-label'>Genre Name</label>
+        <div class='col-sm-9'>
+          {{input class='form-control' id='genre_name' placeholder='Enter Genre' valueBinding='model.name'}}
+        </div>
+      </div>
+    </form>
+
   </script>
 
   <script type="text/x-handlebars" data-template-name="book">
@@ -133,7 +152,7 @@
         <div class="form-group">
           <label for="book_genre" class="col-sm-2 control-label">Genre</label>
           <div class="col-sm-9">
-            {{view Ember.Select content=genres optionLabelPath="content.name" valueBinding="model.genre" class="form-control" id="book_genre"}}
+            {{view Ember.Select content=genres optionLabelPath="model.genre" valueBinding="model.genre" class="form-control" id="book_genre"}}
           </div>
         </div>
 
@@ -146,7 +165,9 @@
 
     </div>
     <hr>
-    {{book-details book=model}}
+    <div id='binding-view'>
+      {{book-details book=model}}
+    </div>
   </script>
 
 
@@ -154,6 +175,7 @@
   <script src="js/libs/handlebars-1.1.2.js"></script>
   <script src="js/libs/ember-1.5.1.js"></script>
   <script src="js/libs/ember-data.js"></script>
+  <script src="js/libs/localstorage_adapter.js"></script>
   <script src="js/app.js"></script>
 
 </body>

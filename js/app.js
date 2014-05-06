@@ -1,6 +1,7 @@
 App = Ember.Application.create();
 
-App.ApplicationAdapter = DS.FixtureAdapter.extend({
+App.ApplicationAdapter = DS.LSAdapter.extend({
+  namespace: 'app-emberjs'
 });
 
 App.BookDetailsComponent = Ember.Component.extend({
@@ -14,7 +15,10 @@ App.BookDetailsComponent = Ember.Component.extend({
 
 App.Router.map(function() {
   this.resource('book', { path: '/books/:book_id' });
-  this.resource('genre', { path: '/generes/:genre_id' });
+  this.resource('genre', { path: '/genres/:genre_id' });
+  this.resource('genres', function() {
+    this.route('new');
+  });
   this.resource('reviews', function() {
     this.route('new');
   });
@@ -41,9 +45,30 @@ App.BookRoute = Ember.Route.extend({
   }
 });
 
+App.GenresNewController = Ember.Route.extend({
+});
+
 App.ReviewsNewRoute = Ember.Route.extend({
   model: function() {
-    return this.store.createRecord('book');
+    return Ember.RSVP.hash({
+      book: this.store.createRecord('book'),
+      genres: this.store.find('genre')
+    });
+  },
+  setupController: function(controller, model) {
+    controller.set('model', model.book);
+    controller.set('genres', model.genres);
+  },
+  actions: {
+    willTransition: function(transition) {
+      if(this.currentModel.book.get('isNew')) {
+        if(confirm("Are you sure you want to leave and lose this review?")) {
+          this.currentModel.book.destroyRecord();
+        } else {
+          transition.abort();
+        }
+      }
+    }
   }
 });
 
@@ -69,6 +94,64 @@ App.Genre = DS.Model.extend({
   name: DS.attr('string'),
   books: DS.hasMany('book', { async: true })
 });
+
+//CONTROLLERS
+
+App.IndexController = Ember.Controller.extend({});
+
+App.BooksController = Ember.ArrayController.extend({
+  sortProperties: ['title']
+});
+
+App.ReviewsNewController = Ember.Controller.extend({
+  ratings: [5,4,3,2,1],
+  genres: [
+    {
+      id: 1,
+      name: 'Science Fiction'
+    },
+    {
+      id: 2,
+      name: 'Fiction'
+    },
+    {
+      id: 3,
+      name: 'Non-Fiction'
+    },
+    {
+      id: 4,
+      name: 'True Crime'
+    },
+    {
+      id: 5,
+      name: 'Young Adult'
+    }
+  ],
+  actions: {
+    createReview: function() {
+      var controller = this;
+      this.get('model').save().then(function() {
+        controller.transitionToRoute('index');
+      });
+    }
+  }
+});
+
+App.GenresNewController = Ember.Controller.extend({
+  actions: {
+    createGenre: function() {
+      var controller = this;
+      this.get('model').save().then(function() {
+        controller.transitionToRoute('index');
+      });
+    }
+  }
+});
+
+App.GenresController = Ember.ArrayController.extend({
+  sortProperties: ['name']
+});
+
 
 //FIXTURES
 
@@ -135,39 +218,3 @@ App.Genre.FIXTURES = [
     name: 'Young Adult'
   }
 ];
-
-//CONTROLLERS
-
-App.IndexController = Ember.Controller.extend({});
-
-App.BooksController = Ember.ArrayController.extend({
-  sortProperties: ['title'],
-  actions: {
-    createBook: function() {
-      var bookName = this.get('newBook');
-      if (!name.trim()) { return; }
-      var book = this.store.createRecord('book', {
-        bookName: bookName
-      });
-      this.set('newBook', '');
-      book.save();
-    }
-  }
-});
-
-App.ReviewsNewController = Ember.Controller.extend({
-  actions: {
-    createReview: function() {
-      var controller = this;
-      this.get('model').save().then(function() {
-        controller.transitionToRoute('index');
-      });
-    }
-  }
-});
-
-App.GenresController = Ember.ArrayController.extend({
-  sortProperties: ['name']
-});
-
-
