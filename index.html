@@ -63,7 +63,7 @@
 
   <script type="text/x-handlebars" data-template-name="genre">
     <ol class='breadcrumb'>
-      <li><a>{{#link-to 'index'}}Genres{{/link-to}}</a>
+      <li>{{#link-to 'index'}}Genres{{/link-to}}</li>
       <li class='active'>{{name}}</li>
     </ol>
 
@@ -90,6 +90,27 @@
 
     </div>
   </script>
+
+  <script type="text/x-handlebars" data-template-name="reviews/new">
+    <ol class='breadcrumb'>
+      <li>{{#link-to 'index'}}Books{{/link-to}}</li>
+      <li class='active'>New</li>
+    </ol>
+
+    <div class='row'>
+      <form class='form-horizontal' role='form'>
+        <div class='form-group'>
+          <label for='book_title' class='col-sm-2 control-label'>Book Title</label>
+          <div class='col-sm-9'>
+            {{input class='form-control' id='book_title' placeholder='Book Title' valueBinding='model.title'}}
+          </div>
+        </div>
+      </form>
+      <hr>
+      <h2>{{model.title}}</h2>
+    </div>
+  </script>
+
 
   <script src="js/libs/jquery-1.10.2.js"></script>
   <script src="js/libs/handlebars-1.1.2.js"></script>

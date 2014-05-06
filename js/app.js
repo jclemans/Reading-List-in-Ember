@@ -15,6 +15,9 @@ App.BookDetailsComponent = Ember.Component.extend({
 App.Router.map(function() {
   this.resource('book', { path: '/books/:book_id' });
   this.resource('genre', { path: '/generes/:genre_id' });
+  this.resource('reviews', function() {
+    this.route('new');
+  });
 });
 
 //ROUTES
@@ -35,6 +38,12 @@ App.IndexRoute = Ember.Route.extend({
 App.BookRoute = Ember.Route.extend({
   model: function(params) {
     return this.store.find('book', params.book_id);
+  }
+});
+
+App.ReviewsNewRoute = Ember.Route.extend({
+  model: function() {
+    return this.store.createRecord('book');
   }
 });
 
@@ -142,6 +151,17 @@ App.BooksController = Ember.ArrayController.extend({
       });
       this.set('newBook', '');
       book.save();
+    }
+  }
+});
+
+App.ReviewsNewController = Ember.Controller.extend({
+  actions: {
+    createReview: function() {
+      var controller = this;
+      this.get('model').save().then(function() {
+        controller.transitionToRoute('index');
+      });
     }
   }
 });
