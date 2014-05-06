@@ -15,10 +15,11 @@ App.BookDetailsComponent = Ember.Component.extend({
 
 App.Router.map(function() {
   this.resource('book', { path: '/books/:book_id' });
-  this.resource('genre', { path: '/genres/:genre_id' });
+  this.resource('genre', { path: '/:genre_id' });
   this.resource('genres', function() {
     this.route('new');
   });
+
   this.resource('reviews', function() {
     this.route('new');
   });
@@ -45,7 +46,10 @@ App.BookRoute = Ember.Route.extend({
   }
 });
 
-App.GenresNewController = Ember.Route.extend({
+App.GenresNewRoute = Ember.Route.extend({
+  model: function() {
+    return this.store.createRecord('genre');
+  }
 });
 
 App.ReviewsNewRoute = Ember.Route.extend({
@@ -81,7 +85,7 @@ App.Book = DS.Model.extend({
   review: DS.attr('string'),
   rating: DS.attr('number'),
   amazon_id: DS.attr(),
-  genre: DS.belongsTo('genre', { async: true }),
+  genre: DS.belongsTo('genre'),
   url: function() {
     return "http://www.amazon.com/dp/products/"+this.get('amazon_id');
   }.property('amazon_id'),
@@ -91,8 +95,7 @@ App.Book = DS.Model.extend({
 });
 
 App.Genre = DS.Model.extend({
-  name: DS.attr('string'),
-  books: DS.hasMany('book', { async: true })
+  name: DS.attr('string')
 });
 
 //CONTROLLERS
@@ -140,10 +143,8 @@ App.ReviewsNewController = Ember.Controller.extend({
 App.GenresNewController = Ember.Controller.extend({
   actions: {
     createGenre: function() {
-      var controller = this;
-      this.get('model').save().then(function() {
-        controller.transitionToRoute('index');
-      });
+      debugger;
+      this.get('model').save();
     }
   }
 });
@@ -153,7 +154,12 @@ App.GenresController = Ember.ArrayController.extend({
 });
 
 
-//FIXTURES
+
+
+
+
+
+//FIXTURES (not currently in use)
 
 App.Book.FIXTURES = [
   {

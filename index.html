@@ -52,24 +52,19 @@
         {{/each}}
       </ul>
       <hr>
-      {{outlet}}
+      {{render 'genres/new'}}
   </script>
 
   <script type="text/x-handlebars" data-template-name="genres/new">
-    <ol class='breadcrumb'>
-      <li>{{#link-to 'index'}}Books{{/link-to}}</li>
-      <li class='active'>New Genre</li>
-    </ol>
-
     <form class='form-horizontal' role='form'>
       <div class='form-group'>
-        <label for='genre_name' class='col-sm-2 control-label'>Genre Name</label>
+        <label for='genre_name' class='col-sm-2 control-label'>Add Genre</label>
         <div class='col-sm-9'>
           {{input class='form-control' id='genre_name' placeholder='Enter Genre' valueBinding='model.name'}}
+          <button type="submit" class="btn btn-default" {{action 'createGenre'}}>Add</button>
         </div>
       </div>
     </form>
-
   </script>
 
   <script type="text/x-handlebars" data-template-name="book">
